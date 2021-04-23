@@ -1,24 +1,36 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-// const spanStyle = {
-//   color: 'blue',
-// };
-
-function myColorStyle(mycolor) {
-  return {
-    color: mycolor,
+class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { favoritecolor: "red" };
   }
-}
+  componentDidMount() {
+    setInterval(() => {
+      this.setState({ favoritecolor: Math.random().toString() })
+    }, 1000)
+  }
 
-class Car extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  // }
-
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    document.getElementById("div1").innerHTML =
+      "Before the update, the favorite was " + prevState.favoritecolor;
+  }
+  componentDidUpdate() {
+    document.getElementById("div2").innerHTML =
+      "The updated favorite is " + this.state.favoritecolor;
+  }
   render() {
-    return <h2>I am a <span style={myColorStyle(this.props.color)}>{this.props.color}</span> Car!</h2>;
+    return (
+      <div>
+        <h1>My Favorite Color is {this.state.favoritecolor}</h1>
+        <div id="div1"></div>
+        <div id="div2"></div>
+      </div>
+    );
   }
 }
 
-ReactDOM.render(<Car color="red" />, document.getElementById('root'));
+
+ReactDOM.render(<Header />, document.getElementById('root'));
+
