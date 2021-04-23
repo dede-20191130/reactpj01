@@ -1,17 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+// const spanStyle = {
+//   color: 'blue',
+// };
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+function myColorStyle(mycolor) {
+  return {
+    color: mycolor,
+  }
+}
+
+class Car extends React.Component {
+  // constructor(props) {
+  //   super(props);
+  // }
+
+  render() {
+    return <h2>I am a <span style={myColorStyle(this.props.color)}>{this.props.color}</span> Car!</h2>;
+  }
+}
+
+ReactDOM.render(<Car color="red" />, document.getElementById('root'));
