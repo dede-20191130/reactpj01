@@ -1,19 +1,48 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './index.css';
 
-class Football extends React.Component {
-  shoot = function(e) {
-    alert(e.target.dataset.demo);
-    console.log(e.target);
-    /*
-    The 'this' keyword refers to the component object
-    */
+class MyForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: '',
+      age: null,
+      errormessage: ''
+    };
+  }
+  myChangeHandler = (event) => {
+    let nam = event.target.name;
+    let val = event.target.value;
+    let err = '';
+    if (nam === "age") {
+      if (val !== "" && !Number(val)) {
+        err = <strong>Your age must be a number</strong>;
+      }
+    }
+    this.setState({ errormessage: err });
+    this.setState({ [nam]: val });
   }
   render() {
     return (
-      <button onClick={this.shoot} data-demo="demodemo">Take the shot!</button>
+      <form>
+        <h1>Hello {this.state.username} {this.state.age}</h1>
+        <p>Enter your name:</p>
+        <input
+          type='text'
+          name='username'
+          onChange={this.myChangeHandler}
+        />
+        <p>Enter your age:</p>
+        <input
+          type='text'
+          name='age'
+          onChange={this.myChangeHandler}
+        />
+        {this.state.errormessage}
+      </form>
     );
   }
 }
 
-ReactDOM.render(<Football />, document.getElementById('root'));
+ReactDOM.render(<MyForm />, document.getElementById('root'));
