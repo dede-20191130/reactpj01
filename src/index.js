@@ -1,36 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-class Header extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { favoritecolor: "red" };
-  }
-  componentDidMount() {
-    setInterval(() => {
-      this.setState({ favoritecolor: Math.random().toString() })
-    }, 1000)
-  }
-
-  getSnapshotBeforeUpdate(prevProps, prevState) {
-    document.getElementById("div1").innerHTML =
-      "Before the update, the favorite was " + prevState.favoritecolor;
-  }
-  componentDidUpdate() {
-    document.getElementById("div2").innerHTML =
-      "The updated favorite is " + this.state.favoritecolor;
+class Football extends React.Component {
+  shoot = function(e) {
+    alert(e.target.dataset.demo);
+    console.log(e.target);
+    /*
+    The 'this' keyword refers to the component object
+    */
   }
   render() {
     return (
-      <div>
-        <h1>My Favorite Color is {this.state.favoritecolor}</h1>
-        <div id="div1"></div>
-        <div id="div2"></div>
-      </div>
+      <button onClick={this.shoot} data-demo="demodemo">Take the shot!</button>
     );
   }
 }
 
-
-ReactDOM.render(<Header />, document.getElementById('root'));
-
+ReactDOM.render(<Football />, document.getElementById('root'));
