@@ -15,7 +15,7 @@ const myContext = React.createContext({
 });
 const setterContext = React.createContext();
 
-const Container = React.memo(() => {
+const Container = () => {
   console.log("render Container")
   const [cxt, setCtx] = useState({
     foo: {
@@ -47,7 +47,7 @@ const Container = React.memo(() => {
       </setterContext.Provider>
     </myContext.Provider>
   )
-})
+}
 
 const Box = React.memo(() => {
   console.log("render Box")
@@ -75,7 +75,7 @@ const EffectBox = React.memo(() => {
 const SetterBox = React.memo(() => {
   console.log("render SetterBox")
   const sc = useContext(setterContext);
-  onclick = () => {
+  const onclick = () => {
     sc({
       foo: {
         apple: 999,
