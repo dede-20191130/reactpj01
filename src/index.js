@@ -1,48 +1,97 @@
-import React from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { useDeepCompareEffect } from 'react-use';
 import './index.css';
+import isDeepEqual from 'fast-deep-equal/react'
 
-class MyForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: '',
-      age: null,
-      errormessage: ''
-    };
+const myContext = React.createContext({
+  foo: {
+    apple: 120
+  },
+  bar: {
+    lemon: 40,
+    melon: 300
   }
-  myChangeHandler = (event) => {
-    let nam = event.target.name;
-    let val = event.target.value;
-    let err = '';
-    if (nam === "age") {
-      if (val !== "" && !Number(val)) {
-        err = <strong>Your age must be a number</strong>;
-      }
+});
+const setterContext = React.createContext();
+
+const Container = React.memo(() => {
+  console.log("render Container")
+  const [cxt, setCtx] = useState({
+    foo: {
+      apple: 200
+    },
+    bar: {
+      grape: 402,
+      melon: 300
     }
-    this.setState({ errormessage: err });
-    this.setState({ [nam]: val });
+  })
+  const cxtRef = useRef(cxt);
+  if (!isDeepEqual(cxtRef.current, cxt)) {
+    cxtRef.current = cxt;
   }
-  render() {
-    return (
-      <form>
-        <h1>Hello {this.state.username} {this.state.age}</h1>
-        <p>Enter your name:</p>
-        <input
-          type='text'
-          name='username'
-          onChange={this.myChangeHandler}
-        />
-        <p>Enter your age:</p>
-        <input
-          type='text'
-          name='age'
-          onChange={this.myChangeHandler}
-        />
-        {this.state.errormessage}
-      </form>
-    );
-  }
-}
 
-ReactDOM.render(<MyForm />, document.getElementById('root'));
+  return (
+    <myContext.Provider
+      value={
+        cxtRef.current
+      }
+    >
+      <setterContext.Provider value={setCtx}>
+
+        <Box></Box>
+        <hr></hr>
+        <EffectBox></EffectBox>
+        <hr></hr>
+        <SetterBox></SetterBox>
+      </setterContext.Provider>
+    </myContext.Provider>
+  )
+})
+
+const Box = React.memo(() => {
+  console.log("render Box")
+  const mc = useContext(myContext);
+  return (
+    <>
+      <p>{Object.entries(mc.foo).join(":")}</p>
+      <p>{Object.entries(mc.bar).join(":")}</p>
+    </>
+  )
+
+})
+
+const EffectBox = React.memo(() => {
+  console.log("render EffectBox")
+  const mc = useContext(myContext);
+  useDeepCompareEffect(() => {
+    console.log("run useDeepCompareEffect");
+    console.log(mc);
+  }, [mc]);
+  return (
+    <p>EffectBox</p>
+  )
+})
+const SetterBox = React.memo(() => {
+  console.log("render SetterBox")
+  const sc = useContext(setterContext);
+  onclick = () => {
+    sc({
+      foo: {
+        apple: 999,
+        apple02: 999,
+        apple03: 999
+      },
+      bar: {
+        grape: 888,
+        melon: 777
+      }
+    });
+  }
+  return (
+    <button onClick={onclick}>SetterBoxButton</button>
+  )
+})
+
+
+ReactDOM.render(<Container />, document.getElementById('root'));
