@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 // import { useDeepCompareEffect } from 'react-use';
 import './index.css';
-// import isDeepEqual from 'fast-deep-equal/react'
+import isDeepEqual from 'fast-deep-equal/react'
 
 const myContext = React.createContext({
   foo: {
@@ -26,11 +26,15 @@ const Container = () => {
       melon: 300
     }
   })
+  const cxtRef = useRef(cxt);
+  if (!isDeepEqual(cxtRef.current, cxt)) {
+    cxtRef.current = cxt;
+  }
 
   return (
     <myContext.Provider
       value={
-        cxt
+        cxtRef.current
       }
     >
       <setterContext.Provider value={setCtx}>
