@@ -44,7 +44,7 @@ const Container = () => {
   )
 }
 
-const Box = () => {
+const Box = React.memo(() => {
   console.log("render Box")
   const mc = useContext(myContext);
   return (
@@ -54,9 +54,9 @@ const Box = () => {
     </>
   )
 
-}
+})
 
-const EffectBox = () => {
+const EffectBox = React.memo(() => {
   console.log("render EffectBox")
   const mc = useContext(myContext);
   useEffect(() => {
@@ -66,8 +66,8 @@ const EffectBox = () => {
   return (
     <p>EffectBox</p>
   )
-}
-const SetterBox = () => {
+})
+const SetterBox = React.memo(() => {
   console.log("render SetterBox")
   const sc = useContext(setterContext);
   const onclick = () => {
@@ -86,7 +86,7 @@ const SetterBox = () => {
   return (
     <button onClick={onclick}>SetterBoxButton</button>
   )
-}
+})
 
 
 ReactDOM.render(<Container />, document.getElementById('root'));
