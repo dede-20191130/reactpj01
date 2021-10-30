@@ -1,8 +1,8 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { useDeepCompareEffect } from 'react-use';
+// import { useDeepCompareEffect } from 'react-use';
 import './index.css';
-import isDeepEqual from 'fast-deep-equal/react'
+// import isDeepEqual from 'fast-deep-equal/react'
 
 const myContext = React.createContext({
   foo: {
@@ -26,19 +26,14 @@ const Container = () => {
       melon: 300
     }
   })
-  const cxtRef = useRef(cxt);
-  if (!isDeepEqual(cxtRef.current, cxt)) {
-    cxtRef.current = cxt;
-  }
 
   return (
     <myContext.Provider
       value={
-        cxtRef.current
+        cxt
       }
     >
       <setterContext.Provider value={setCtx}>
-
         <Box></Box>
         <hr></hr>
         <EffectBox></EffectBox>
@@ -49,7 +44,7 @@ const Container = () => {
   )
 }
 
-const Box = React.memo(() => {
+const Box = () => {
   console.log("render Box")
   const mc = useContext(myContext);
   return (
@@ -59,20 +54,20 @@ const Box = React.memo(() => {
     </>
   )
 
-})
+}
 
-const EffectBox = React.memo(() => {
+const EffectBox = () => {
   console.log("render EffectBox")
   const mc = useContext(myContext);
-  useDeepCompareEffect(() => {
+  useEffect(() => {
     console.log("run useDeepCompareEffect");
     console.log(mc);
-  }, [mc]);
+  }, []);
   return (
     <p>EffectBox</p>
   )
-})
-const SetterBox = React.memo(() => {
+}
+const SetterBox = () => {
   console.log("render SetterBox")
   const sc = useContext(setterContext);
   const onclick = () => {
@@ -91,7 +86,7 @@ const SetterBox = React.memo(() => {
   return (
     <button onClick={onclick}>SetterBoxButton</button>
   )
-})
+}
 
 
 ReactDOM.render(<Container />, document.getElementById('root'));
